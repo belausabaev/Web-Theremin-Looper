@@ -65,22 +65,30 @@ const voices = pane.addFolder({
     title: 'THEREMIN CLASSIC',
 });
 
-const thereminBtn = pane.addButton({
+const thereminBtn = voices.addButton({
     title: 'theremin voice',
   //  label: 'sound on/off',
 });
 
-const thereminSampler = pane.addButton({
+const thereminSampler = voices.addButton({
     title: 'theremin sampler',
   //  label: 'sound on/off',
 });
 
-const melody = pane.addButton({
+const melody = voices.addButton({
     title: 'theremin melody',
   //  label: 'sound on/off',
 });
 
+pane.addSeparator();
 
+const algos = pane.addFolder({
+    title: 'SOUND ALGORITHMS',
+});
+
+const gpOn = algos.addButton({
+    title: 'grain player',
+});
 
 
 thereminBtn.on('click', () => {
@@ -110,7 +118,6 @@ thereminSampler.on('click', () => {
 
 melody.on('click', () => {
     if(player.state == "started"){
-
         Tone.Transport.pause();
     } else {
         Tone.Transport.start();
@@ -128,4 +135,90 @@ melody.on('click', () => {
       //  console.log("sampler "+ therMelody);
     }
     */
+});
+
+gpOn.on('click', () => {
+    if(gp.state == "started"){
+        gp.stop();
+    } else {
+        gp.start();
+    }
+    /*
+    if(grainPlaying){ 
+        grainPlaying = false;
+        gp.stop();
+    }else{ 
+        grainPlaying = true;
+        gp.start();
+    }
+    */
+});
+
+const gs = pane.addFolder({
+    title: 'GRAIN SETTINGS',
+    expanded: true,
+});
+
+
+// #### SOUND SAMPLE BUFFERS
+
+const sampleBuf1 = new Tone.ToneAudioBuffer('data/samples/audio/SH-el.mp3', () => {
+    console.log('loaded');
+});
+const sampleBuf2 = new Tone.ToneAudioBuffer('data/samples/audio/guitar.wav', () => {
+    console.log('loaded');
+});
+const sampleBuf3 = new Tone.ToneAudioBuffer('data/samples/audio/piano+spaceecho.mp3', () => {
+    console.log('loaded');
+});
+const melody1 = new Tone.ToneAudioBuffer('data/music/Theremin_Hauptstimme_ohne_Stille.wav', () => {
+    console.log('loaded');
+});
+
+const SourceInput = gs.addInput(PARAMS, 'source', { options: { Synthetic_Sound: 0, Guitar: 1, Piano: 2, Theremin_Melody_1: 3 } });
+SourceInput.on('change', function (ev) {
+    grainSample = ev.value;
+    if (grainSample == 0) {
+        gp.stop();
+        gp.buffer = sampleBuf1;
+        grainPlaying = false;
+    } else if (grainSample == 1) {
+        gp.stop();
+        gp.buffer = sampleBuf2;
+        grainPlaying = false;
+    } else if (grainSample == 2) {
+        gp.stop();
+        gp.buffer = sampleBuf3;
+        grainPlaying = false;
+    } else if (grainSample == 3) {
+        gp.stop();
+        gp.buffer = melody1;
+        grainPlaying = false;
+    }
+});
+
+
+const attackInput = gs.addInput(PARAMS, 'grainSize', { min: 0.01, max: 0.1, step: 0.01 });
+attackInput.on('change', function (ev) {
+    gS = parseFloat(ev.value.toFixed(2));
+    gp.grainSize = gS;
+});
+
+const decayInput = gs.addInput(PARAMS, 'overlap', { min: 0.0, max: 0.1, step: 0.01 });
+decayInput.on('change', function (ev) {
+    oL = parseFloat(ev.value.toFixed(2));
+    gp.overlap = oL;
+});
+
+const maxDetune = gs.addInput(PARAMS, 'detune', { min: 0, max: 800, step: 10 });
+maxDetune.on('change', function (ev) {
+    detuneMaxValue = ev.value;
+});
+
+const changePBR = gs.addInput(PARAMS, 'playbackrate', { min: 0.01, max: 2, step: 0.01 });
+
+changePBR.on('change', function (ev) {
+    pbr = parseFloat(ev.value.toFixed(2));
+    console.log("pbr " + pbr);
+    playbackrate = pbr;
 });

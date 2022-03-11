@@ -59,7 +59,7 @@ const player = new Tone.Player({
 let detuneMaxValue = 100;
 let playbackrate = 1;
 
-gp = new Tone.GrainPlayer('grainsynth/samples/audio/SH-el.mp3', function () {
+gp = new Tone.GrainPlayer('data/samples/audio/SH-el.mp3', function () {
     console.log('GrainPlayer loaded!');
     console.log('gp.playbackRate:', gp.playbackRate);
     console.log('gp.detune', gp.detune);
@@ -75,20 +75,7 @@ let grainPlaying = false;
 
 
 
-// #### SOUND SAMPLE BUFFERS
 
-const sample1 = new Tone.ToneAudioBuffer('data/samples/audio/SH-el.mp3', () => {
-    console.log('loaded');
-});
-const sample2 = new Tone.ToneAudioBuffer('data/samples/audio/guitar.wav', () => {
-    console.log('loaded');
-});
-const sample3 = new Tone.ToneAudioBuffer('data/samples/audio/piano+spaceecho.mp3', () => {
-    console.log('loaded');
-});
-const melody1 = new Tone.ToneAudioBuffer('data/music/Theremin_Hauptstimme_ohne_Stille.wav', () => {
-    console.log('loaded');
-});
 
 /*
 function preload() {
@@ -248,7 +235,7 @@ function draw() {
             
           }
 
-            if (grainPlaying) {
+      //      if (grainPlaying) {
                 //left hand height controls playbackrate, maximum playbackrate set in GUI
                 const currPbr = map(handL.y, 0, video.height, 0.001, playbackrate); // values below 0.001 break the grain player
                 // console.log("handl y "+handL.y);
@@ -264,7 +251,7 @@ function draw() {
                 const currDetune = map(handR.x, 0, video.width, -detuneMaxValue, detuneMaxValue);
                 //  console.log("currDetune:", currDetune)
                 gp.detune = currDetune;
-            }
+   //         }
         }
     }
 
