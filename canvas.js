@@ -58,6 +58,7 @@ const player = new Tone.Player({
 
 let detuneMaxValue = 100;
 let playbackrate = 1;
+let grainSize = 0.1;
 
 gp = new Tone.GrainPlayer('data/samples/audio/SH-el.mp3', function () {
     console.log('GrainPlayer loaded!');
@@ -237,20 +238,30 @@ function draw() {
 
       //      if (grainPlaying) {
                 //left hand height controls playbackrate, maximum playbackrate set in GUI
-                const currPbr = map(handL.y, 0, video.height, 0.001, playbackrate); // values below 0.001 break the grain player
+                const currPbr = map(handL.y, video.height, 0, playbackrate, 0.001); // values below 0.001 break the grain player
                 // console.log("handl y "+handL.y);
                 //console.log("gp pbr "+playbackrate);
                 // console.log("curr pbr "+currPbr);
+
+                const currGS = map(handR.x, video.width, 0, grainSize, 0);
+                gp.grainSize = currGS;
+                PARAMS.grainSize = currGS;
+                console.log("grainsize "+currGS);
+
                 if (currPbr < 0.001) {
                     console.log('handL.y', handL.y, ' playback rate ', playbackrate, ' curr pbr ', currPbr);
                     gp.playbackRate = 0.001;
+                    PARAMS.playbackrate = 0.001; // für das gui monitoring
                 } else {
                     gp.playbackRate = currPbr;
+                    PARAMS.playbackrate = currPbr; // gui monitoring
                 }
+
                 // right hand x position controls amount of detuning. detune maximum set in GUI
-                const currDetune = map(handR.x, 0, video.width, -detuneMaxValue, detuneMaxValue);
+                const currDetune = map(handR.y, 0, video.height, -detuneMaxValue, detuneMaxValue);
                 //  console.log("currDetune:", currDetune)
                 gp.detune = currDetune;
+                PARAMS.detune = currDetune;
    //         }
         }
     }

@@ -16,10 +16,13 @@ const PARAMS = {
     overlap: 0, //in seconds
     detune: 0, // detuning in cents, 100 cent = 1 semitone
     playbackrate: 1, //playback rate factor
-    bpm: 108   // transport bpm
+    bpm: 108,   // transport bpm
+    fbdelay: 0 // feedback delay
 };
 
 console.log(synth.volume.value);
+
+
 
 const pane = new Tweakpane({
     title: 'VIRTUAL THEREMIN SOUNDS',
@@ -58,6 +61,8 @@ bpmInput.on('change', function (ev) {
     console.log("transport bpm :"+ Tone.Transport.bpm.value);
 });
 
+
+// ### THEREMIN VOICE GUI ##########################
 
 pane.addSeparator();
 
@@ -137,6 +142,9 @@ melody.on('click', () => {
     */
 });
 
+
+// ### GRANULAR SYNTHESIS GUI ###################################
+
 gpOn.on('click', () => {
     if(gp.state == "started"){
         gp.stop();
@@ -182,26 +190,31 @@ SourceInput.on('change', function (ev) {
         gp.stop();
         gp.buffer = sampleBuf1;
         grainPlaying = false;
+        gp.start(+2);
     } else if (grainSample == 1) {
         gp.stop();
         gp.buffer = sampleBuf2;
         grainPlaying = false;
+        gp.start(+2);
     } else if (grainSample == 2) {
         gp.stop();
         gp.buffer = sampleBuf3;
         grainPlaying = false;
+        gp.start(+2);
     } else if (grainSample == 3) {
         gp.stop();
         gp.buffer = melody1;
         grainPlaying = false;
+        gp.start(+2);
     }
 });
 
 
-const attackInput = gs.addInput(PARAMS, 'grainSize', { min: 0.01, max: 0.1, step: 0.01 });
+const attackInput = gs.addInput(PARAMS, 'grainSize', { min: 0.01, max: 1, step: 0.01 });
 attackInput.on('change', function (ev) {
     gS = parseFloat(ev.value.toFixed(2));
     gp.grainSize = gS;
+    grainSize = gS;
 });
 
 const decayInput = gs.addInput(PARAMS, 'overlap', { min: 0.0, max: 0.1, step: 0.01 });
@@ -222,3 +235,10 @@ changePBR.on('change', function (ev) {
     console.log("pbr " + pbr);
     playbackrate = pbr;
 });
+
+pane.addMonitor(PARAMS,'grainSize',{ view:'graph', min: 0, max: 1});
+pane.addMonitor(PARAMS,'overlap',{ view:'graph', min: 0, max: 0.1});
+pane.addMonitor(PARAMS,'detune',{ view:'graph', min: 0, max: 800});
+pane.addMonitor(PARAMS,'playbackrate',{ view:'graph', min: 0, max: 2});
+
+pane.addMonitor(PARAMS,'fbdelay',{ view:'graph', min: 0.0, max: 1.0});
