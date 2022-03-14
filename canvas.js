@@ -6,10 +6,6 @@ let vidSize;
 let frequency;
 let synthVolume;
 
-//let last_freq = 440; 
-let lastNote = 0;
-let note = 0;
-
 let thereminMusic;
 
 // suspend sound on page upon loading page
@@ -40,6 +36,10 @@ let synth = new Tone.DuoSynth({
 
 // ### TONE SAMPLER
 const env = new Tone.AmplitudeEnvelope().toDestination();
+
+
+let lastNote = 0;
+let note = 0;
 
 const sampler = new Tone.Sampler({
     urls: {
@@ -217,7 +217,7 @@ function draw() {
                     // mit asynchroner granular synthese etwas zu machen? dann klingt das ähnlich vom timbre des samples
                     // ist aber verbundener, und eher wie ein flächiger theremin sound
                     // hier envelopes hinzufügen, und die länge der Noten regeln
-                    getNote(frequency);
+                    toNote(frequency);
                     console.log("cur note " + note);
                     if (lastNote != 0) {
                         if (note != lastNote) {
@@ -307,7 +307,7 @@ setInterval(function () {
 }, 200);
 */
 
-function getNote(frequency) {
+function toNote(frequency) {
     if (frequency > 494 && frequency < 523) {
         note = 'B4';
     } else if (frequency > 466 && frequency < 494) {
