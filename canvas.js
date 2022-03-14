@@ -35,14 +35,15 @@ let synth = new Tone.DuoSynth({
 }).toDestination();
 
 // ### TONE SAMPLER
+const env = new Tone.AmplitudeEnvelope().toDestination();
 
 const sampler = new Tone.Sampler({
     urls: {
-        C4: 'data/music/sine-wave-c4.wav',
-        'G#4': 'data/music/sine-wave-e4.wav',
-        E4: 'data/music/sine-wave-gs4.wav',
+        C4: 'data/music/c4.mp3',
+        'G#4': 'data/music/g-4.mp3',
+        E4: 'data/music/e4.mp3',
     },
-    release: 1,
+    release: 0.5,
     // baseUrl: 'https://tonejs.github.io/audio/salamander/',
 }).toDestination();
 
@@ -71,7 +72,6 @@ gp = new Tone.GrainPlayer('data/samples/audio/SH-el.mp3', function () {
 
 let playing = false;
 let therSampler = false;
-
 let grainPlaying = false;
 
 
@@ -202,8 +202,9 @@ function draw() {
           if(therSampler){
             frequency = map(handR.x, 0, 640, 880, 220);
            // sampler.triggerAttackRelease(frequency, noteDuration);
-            
-           let noteDuration = 0.1;
+        
+           let noteDuration = 0.5;
+           
            // ok, vielleicht kann man hier probieren ein längeres sauberes theremin sample zu bekommen, und dann 
            // mit asynchroner granular synthese etwas zu machen? dann klingt das ähnlich vom timbre des samples
            // ist aber verbundener, und eher wie ein flächiger theremin sound
